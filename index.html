@@ -19,13 +19,12 @@
     #wheel-container {
         position: relative;
         display: inline-block;
-        margin-top: 50px; /* Platz für Pfeil oben */
+        margin-top: 50px;
     }
     #wheel {
         border-radius: 50%;
         box-shadow: inset 0 0 20px rgba(0,0,0,0.3), 0 5px 15px rgba(0,0,0,0.4);
     }
-    /* Pfeil oben, nicht gedreht */
     #pointer {
         position: absolute;
         top: -30px;
@@ -89,6 +88,9 @@
 <script>
 const canvas = document.getElementById("wheel");
 const ctx = canvas.getContext("2d");
+
+// Google Sheets Web-App URL hier eintragen:
+const SHEETS_URL = "https://script.google.com/macros/s/DEINE-ID/exec";
 
 // 12 Segmente: 1x +3, 2x +1, Rest 0
 const segments = [
@@ -208,8 +210,23 @@ function showResult(index) {
     const btn = document.getElementById("spin-btn");
     btn.disabled = true;
     btn.textContent = "Heute gedreht";
+
+    // --- Ergebnis an Google Sheets senden ---
+    if (SHEETS_URL && !SHEETS_URL.includes("DEINE-ID")) {
+        fetch(SHEETS_URL, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+                date: new Date().toISOString().slice(0, 10),
+                points: prize.points,
+                user: localStorage.getItem('gluecksrad_user') || 'anonymous',
+                angle: index
+            })
+        }).catch(err => console.error("Sheets POST fehlgeschlagen:", err));
+    }
 }
 
+// Tägliche Limitierung
 const today = new Date().toISOString().slice(0, 10);
 const lastSpinDate = localStorage.getItem('lastSpinDate');
 if (lastSpinDate === today) {
