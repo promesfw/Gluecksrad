@@ -25,17 +25,17 @@
         border-radius: 50%;
         box-shadow: inset 0 0 20px rgba(0,0,0,0.3), 0 5px 15px rgba(0,0,0,0.4);
     }
-    /* Pfeil oben, Spitze nach unten */
+    /* Pfeil oben, nicht gedreht */
     #pointer {
         position: absolute;
         top: -30px;
         left: 50%;
-        transform: translateX(-50%) rotate(180deg);
+        transform: translateX(-50%);
         width: 0; 
         height: 0; 
         border-left: 20px solid transparent;
         border-right: 20px solid transparent;
-        border-top: 30px solid #d32f2f;
+        border-bottom: 30px solid #d32f2f;
         filter: drop-shadow(0 2px 4px rgba(0,0,0,0.4));
     }
     #spin-btn {
@@ -150,7 +150,7 @@ function spinWheel() {
 
     const targetIndex = Math.floor(Math.random() * segments.length);
     const fullRotations = 5;
-    const targetAngle = (3 * Math.PI / 2) - (targetIndex * segAngle) - segAngle/2; // Pfeil oben -> 270°
+    const targetAngle = (3 * Math.PI / 2) - (targetIndex * segAngle) - segAngle/2;
 
     let totalRotation = fullRotations * 2 * Math.PI + normalizeAngle(targetAngle - angle);
     let currentRotation = 0;
